@@ -1,0 +1,22 @@
+version: 2.1
+
+setup: true
+
+orbs:
+  continuation: circleci/continuation@0.1.2
+
+jobs:
+  setup:
+    executor: continuation/default
+    steps:
+      - checkout
+      - run:
+          name: Generate Config
+          command: cat premade-config.yml > generated-config.yml
+      - continuation/continue:
+          configuration_path: generated-config.yml
+
+workflows:
+  setup:
+    jobs:
+      - setup
