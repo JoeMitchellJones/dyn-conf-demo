@@ -1,3 +1,5 @@
+version: 2.1
+
 jobs:
   api-build-job:
     docker:
@@ -7,3 +9,7 @@ jobs:
           name: Something has changed in API
           command: echo Something in API has changed
         
+workflows:
+  build-api:
+    jobs:
+      - api-build-job

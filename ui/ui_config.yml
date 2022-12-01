@@ -1,3 +1,5 @@
+version: 2.1
+
 jobs:
   build-ui-job:
     docker:
@@ -6,3 +8,8 @@ jobs:
       - run:
           name: Something has changed in UI
           command: echo Something in UI has changed
+
+workflows:
+  build-ui:
+    jobs:
+      - build-ui-job
