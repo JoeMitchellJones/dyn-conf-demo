@@ -4,3 +4,8 @@ jobs:
       - run:
           name: Say Hello!
           command: echo Hello!
+
+workflows:
+  greet:
+    jobs:
+      - say-hello
