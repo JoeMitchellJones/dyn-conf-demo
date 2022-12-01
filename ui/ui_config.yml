@@ -1,0 +1,8 @@
+jobs:
+  build-ui-job:
+    docker:
+      - image: cimg/base:2022.11
+    steps:
+      - run:
+          name: Something has changed in UI
+          command: echo Something in UI has changed
