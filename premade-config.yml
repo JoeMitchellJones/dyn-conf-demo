@@ -2,6 +2,8 @@ version: 2.1
 
 jobs:
   say-hello:
+    docker:
+      - image: cimg/base:2022.11
     steps:
       - run:
           name: Say Hello!
