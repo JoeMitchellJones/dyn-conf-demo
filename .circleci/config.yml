@@ -9,5 +9,4 @@ workflows:
   setup:
     jobs:
       - config-splitting/run-modular-configs-selectively:
-          base-revision: config-splitting
-          module-list-file: change-watch.txt
+          config-list-file: config-files.txt

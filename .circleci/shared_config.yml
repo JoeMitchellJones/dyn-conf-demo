@@ -1,0 +1,8 @@
+version: 2.1
+
+commands:
+  say-hello:
+    steps:
+      - run:
+          name: Say Hello
+          command: echo Hello!

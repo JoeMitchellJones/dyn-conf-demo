@@ -5,6 +5,7 @@ jobs:
     docker:
       - image: cimg/base:2022.11
     steps:
+      - say-hello
       - run:
           name: Something has changed in UI
           command: echo Something in UI has changed
