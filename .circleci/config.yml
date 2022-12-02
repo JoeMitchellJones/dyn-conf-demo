@@ -10,3 +10,4 @@ workflows:
     jobs:
       - config-splitting/run-all-modular-configs:
           config-list-file: config-files.txt
+          shared-config-file: .circleci/shared_config.yml
