@@ -8,5 +8,5 @@ orbs:
 workflows:
   setup:
     jobs:
-      - config-splitting/run-modular-configs-selectively:
+      - config-splitting/run-all-modular-configs:
           config-list-file: config-files.txt
