@@ -5,6 +5,7 @@ jobs:
     docker:
       - image: cimg/base:2022.11
     steps:
+      - say-hello
       - run:
           name: Something has changed in API
           command: echo Something in API has changed
