@@ -76,7 +76,7 @@ commands:
         type: string
     steps:
       - run:
-          command: |
+          command: >
             #!/bin/bash
             set -euo pipefail
             
@@ -96,6 +96,11 @@ commands:
             
             xargs -a "${CONFIG_LIST_MODIFIED}" yq -Y -s 'reduce .[] as $item ({}; .
             * $item)' | tee "${OUTPUT}"
+
+          environment:
+            CONFIG_LIST_ORIGINAL: << parameters.config-list-file >>
+            OUTPUT: << parameters.output >>
+            SHARED_CONFIG_FILE: << parameters.shared-config-file >>
 
 jobs:
   run-modular-configs-selectively:
