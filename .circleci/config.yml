@@ -94,8 +94,7 @@ commands:
             echo "${SHARED_CONFIG_FILE}" >>"${CONFIG_LIST_MODIFIED}"
             fi
             
-            xargs -a "${CONFIG_LIST_MODIFIED}" yq -Y -s 'reduce .[] as $item ({}; .
-            * $item)' | tee "${OUTPUT}"
+            xargs -a "${CONFIG_LIST_MODIFIED}" yq -Y -s 'reduce .[] as $item ({}; . * $item)' | tee "${OUTPUT}"
 
           environment:
             CONFIG_LIST_ORIGINAL: << parameters.config-list-file >>
