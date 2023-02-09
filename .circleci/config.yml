@@ -30,7 +30,7 @@ commands:
         type: string
     steps:
       - run:
-          command: |
+          command: >
             #!/bin/bash
             
             set -euo pipefail
@@ -56,6 +56,9 @@ commands:
             done <"${MODULE_LIST_FILE}"
             
             sort -u -o "${OUTPUT}" "${OUTPUT}"
+
+            cat $OUTPUT
+            
           environment:
             BASE_REVISION: << parameters.base-revision >>
             CONFIG_DEPENDENCIES_FILE: .circleci-config-dependencies
@@ -87,6 +90,8 @@ commands:
             fi
             
             CONFIG_LIST_MODIFIED=$(mktemp)
+
+            cat $CONFIG_LIST_ORIGINAL
             
             cat "${CONFIG_LIST_ORIGINAL}" >>"${CONFIG_LIST_MODIFIED}"
             
