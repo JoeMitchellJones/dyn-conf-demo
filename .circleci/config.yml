@@ -3,7 +3,117 @@ version: 2.1
 setup: true
 
 orbs:
-  config-splitting: circle-makotom-orbs/config-splitting@0.0.8
+  continuation: circleci/continuation@0.2.0
+
+commands:
+  prepare:
+    steps:
+      - checkout
+      - run:
+          command: pip install yq
+          name: Install yq
+
+
+  select-configs:
+    parameters:
+      base-revision:
+        default: main
+        description: Revision to compare with the current HEAD
+        type: string
+      force-all:
+        default: false
+        description: Emergency valve - forcibly build all the modules
+        type: boolean
+      module-list-file:
+        type: string
+      output:
+        type: string
+    steps:
+      - run:
+          command: |
+            #!/bin/bash
+            
+            set -euo pipefail
+            
+            touch "${OUTPUT}"
+            
+            DIFFS=$(
+            cat \<<EOD
+            $(git diff --name-only "${BASE_REVISION}")
+            $(git diff --name-only HEAD~1 || git ls-tree -r --name-only HEAD)
+            EOD
+            )
+            export DIFFS
+            
+            while read -r module; do
+            # Include if:
+            #   1)  `force-all` is set to `true`,
+            #   2)  there is any difference against `base-revision` or `HEAD~1` (the previous commit), or
+            #   3)  there is no `HEAD~1` (i.e., this is the very first commit for the repo).
+            if [[ "${FORCE_ALL}" == 'true' ]] || printenv DIFFS | grep -qs "^${module%%*(/)}"; then
+            cat "${module}/${CONFIG_DEPENDENCIES_FILE}" >>"${OUTPUT}"
+            fi
+            done <"${MODULE_LIST_FILE}"
+            
+            sort -u -o "${OUTPUT}" "${OUTPUT}"
+          environment:
+            BASE_REVISION: << parameters.base-revision >>
+            CONFIG_DEPENDENCIES_FILE: .circleci-config-dependencies
+            FORCE_ALL: << parameters.force-all >>
+            MODULE_LIST_FILE: << parameters.module-list-file >>
+            OUTPUT: << parameters.output >>
+          name: Generate the list of modules having changes
+
+  combine-configs:
+    parameters:
+      config-list-file:
+        description: Path to the file listing configs to combine
+        type: string
+      output:
+        description: Path for the resulting config
+        type: string
+      shared-config-file:
+        type: string
+    steps:
+      - run:
+          command: |
+            #!/bin/bash
+            set -euo pipefail
+            
+            if [[ ! -s "${CONFIG_LIST_ORIGINAL}" ]]; then
+            echo 'Nothing to combine. Halting the job.'
+            circleci-agent step halt
+            exit
+            fi
+            
+            CONFIG_LIST_MODIFIED=$(mktemp)
+            
+            cat "${CONFIG_LIST_ORIGINAL}" >>"${CONFIG_LIST_MODIFIED}"
+            
+            if [[ -s "${SHARED_CONFIG_FILE}" ]]; then
+            echo "${SHARED_CONFIG_FILE}" >>"${CONFIG_LIST_MODIFIED}"
+            fi
+            
+            xargs -a "${CONFIG_LIST_MODIFIED}" yq -Y -s 'reduce .[] as $item ({}; .
+            * $item)' | tee "${OUTPUT}"
+
+jobs:
+  run-modular-configs-selectively:
+    docker:
+      - image: 'cimg/python:3.9'
+    steps:
+      - prepare
+      - select-configs:
+          base-revision: config-splitting
+          module-list-file: change-watch.txt
+          output: /tmp/selected-configs.txt
+      - combine-configs:
+          config-list-file: /tmp/selected-configs.txt
+          output: /tmp/continuation-config.yml
+          shared-config-file: .circleci/config-shared.yml
+      - continuation/continue:
+          configuration_path: /tmp/continuation-config.yml
+    
 
 workflows:
   setup:
