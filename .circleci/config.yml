@@ -93,6 +93,10 @@ commands:
             
             if [[ -s "${SHARED_CONFIG_FILE}" ]]; then
                 echo "${SHARED_CONFIG_FILE}" >>"${CONFIG_LIST_MODIFIED}"
+                x=$(tail -c 1 ${CONFIG_LIST_MODIFIED})
+                if [ "$x" != "" ]
+                    then echo >> ${CONFIG_LIST_MODIFIED}
+                fi
             fi
 
             # shellcheck disable=SC2016
