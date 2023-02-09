@@ -57,7 +57,7 @@ commands:
             
             sort -u -o "${OUTPUT}" "${OUTPUT}"
 
-            cat $OUTPUT
+            cat $OUTPUT || echo $OUTPUT
             
           environment:
             BASE_REVISION: << parameters.base-revision >>
@@ -91,7 +91,7 @@ commands:
             
             CONFIG_LIST_MODIFIED=$(mktemp)
 
-            cat $CONFIG_LIST_ORIGINAL
+            cat $CONFIG_LIST_ORIGINAL || echo $CONFIG_LIST_ORIGINAL
             
             cat "${CONFIG_LIST_ORIGINAL}" >>"${CONFIG_LIST_MODIFIED}"
             
