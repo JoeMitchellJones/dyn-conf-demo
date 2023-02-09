@@ -110,7 +110,7 @@ jobs:
       - combine-configs:
           config-list-file: /tmp/selected-configs.txt
           output: /tmp/continuation-config.yml
-          shared-config-file: .circleci/config-shared.yml
+          shared-config-file: .circleci/continue-shared.yml
       - continuation/continue:
           configuration_path: /tmp/continuation-config.yml
     
@@ -118,6 +118,4 @@ jobs:
 workflows:
   setup:
     jobs:
-      - config-splitting/run-modular-configs-selectively:
-          base-revision: config-splitting
-          module-list-file: change-watch.txt
+      - run-modular-configs-selectively
