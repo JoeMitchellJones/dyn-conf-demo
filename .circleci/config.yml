@@ -30,7 +30,7 @@ commands:
         type: string
     steps:
       - run:
-          command: >
+          command: |
             #!/bin/bash
             
             set -euo pipefail
