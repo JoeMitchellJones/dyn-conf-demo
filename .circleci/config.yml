@@ -11,10 +11,10 @@ jobs:
       - image: cimg/node:lts
     steps:
       - checkout
+      - run: npm ci
       - run:
           name: Generate Config
           command: node generate.js
-      - run: npm ci
       - continuation/continue:
           configuration_path: generated_config.yml
 
