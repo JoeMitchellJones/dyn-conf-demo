@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@circleci/circleci-config-sdk": "^0.12.0"
+  }
+}
