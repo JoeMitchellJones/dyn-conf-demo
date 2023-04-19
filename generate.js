@@ -19,14 +19,14 @@ testJob
   .addStep(new CircleCI.commands.Checkout())
   .addStep(
     new CircleCI.commands.Run({
-      command: 'Say Hello!',
-      name: 'echo Hello!',
+      name: 'Say Hello!',
+      command: 'echo Hello!',
     }),
   )
   .addStep(
     new CircleCI.commands.Run({
-      command: 'Say Goodbye!',
-      name: 'echo Goodbye!',
+      name: 'Say Goodbye!',
+      command: 'echo Goodbye!',
     }),
   );
 
