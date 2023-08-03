@@ -2,6 +2,11 @@ version: 2.1
 
 setup: true
 
+parameters:
+  example:
+    type: string
+    default: "me default"
+
 orbs:
   continuation: circleci/continuation@0.1.2
 
