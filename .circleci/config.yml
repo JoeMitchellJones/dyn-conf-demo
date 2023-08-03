@@ -15,6 +15,7 @@ jobs:
     executor: continuation/default
     steps:
       - checkout
+      - run: echo << pipeline.parameters.example >>
       - run:
           name: Generate Config
           command: cat premade-config.yml > generated-config.yml
